@@ -1,5 +1,19 @@
+# 原项目生成文件
 /test
 /test.exe
-/.DS_Store
 /test.o
 /test.obj
+
+# macOS 系统文件
+/.DS_Store
+
+# CMake 构建目录
+/build/
+
+# C/C++ 编译产物
+*.exe
+*.o
+*.obj
+
+# VS Code 本地配置
+.vscode/
