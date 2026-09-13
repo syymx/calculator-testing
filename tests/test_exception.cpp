@@ -2,30 +2,34 @@
 
 #include "../src/calculator.hpp"
 
-// 1. 直接除零
+// 直接除零
 TEST(ExceptionTest, DivisionByZero) {
-    EXPECT_ANY_THROW(
-        calculator::eval("10 / 0")
+    EXPECT_THROW(
+        calculator::eval("10 / 0"),
+        calculator::error
     );
 }
 
-// 2. 除数由表达式计算得到 0
+// 表达式除零
 TEST(ExceptionTest, DivisionByExpressionZero) {
-    EXPECT_ANY_THROW(
-        calculator::eval("10 / (2 - 2)")
+    EXPECT_THROW(
+        calculator::eval("10 / (2 - 2)"),
+        calculator::error
     );
 }
 
-// 3. 直接模零
+// 直接模零
 TEST(ExceptionTest, ModuloByZero) {
-    EXPECT_ANY_THROW(
-        calculator::eval("10 % 0")
+    EXPECT_THROW(
+        calculator::eval("10 % 0"),
+        calculator::error
     );
 }
 
-// 4. 模数由表达式计算得到 0
+// 表达式模零
 TEST(ExceptionTest, ModuloByExpressionZero) {
-    EXPECT_ANY_THROW(
-        calculator::eval("10 % (2 - 2)")
+    EXPECT_THROW(
+        calculator::eval("10 % (2 - 2)"),
+        calculator::error
     );
 }

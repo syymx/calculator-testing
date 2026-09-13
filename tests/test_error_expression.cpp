@@ -2,83 +2,82 @@
 
 #include "../src/calculator.hpp"
 
-// ==================== 1. 缺失操作数 ====================
-
-// 缺失右操作数
+// 缺少右操作数
 TEST(ErrorExpressionTest, MissingRightOperand) {
-    EXPECT_ANY_THROW(
-        calculator::eval("1 +")
+    EXPECT_THROW(
+        calculator::eval("1 +"),
+        calculator::error
     );
 }
 
-// 缺失左操作数
+// 缺少左操作数
 TEST(ErrorExpressionTest, MissingLeftOperand) {
-    EXPECT_ANY_THROW(
-        calculator::eval("* 2")
+    EXPECT_THROW(
+        calculator::eval("* 2"),
+        calculator::error
     );
 }
 
-// 运算符后缺少合法操作数
+// 运算符后缺少操作数
 TEST(ErrorExpressionTest, MissingOperandAfterOperator) {
-    EXPECT_ANY_THROW(
-        calculator::eval("1 + * 2")
+    EXPECT_THROW(
+        calculator::eval("1 + * 2"),
+        calculator::error
     );
 }
-
-
-// ==================== 2. 括号错误 ====================
 
 // 缺少右括号
 TEST(ErrorExpressionTest, MissingRightParenthesis) {
-    EXPECT_ANY_THROW(
-        calculator::eval("(1 + 2")
+    EXPECT_THROW(
+        calculator::eval("(1 + 2"),
+        calculator::error
     );
 }
 
 // 多余右括号
 TEST(ErrorExpressionTest, ExtraRightParenthesis) {
-    EXPECT_ANY_THROW(
-        calculator::eval("1 + 2)")
+    EXPECT_THROW(
+        calculator::eval("1 + 2)"),
+        calculator::error
     );
 }
 
 // 空括号
 TEST(ErrorExpressionTest, EmptyParentheses) {
-    EXPECT_ANY_THROW(
-        calculator::eval("()")
+    EXPECT_THROW(
+        calculator::eval("()"),
+        calculator::error
     );
 }
 
-
-// ==================== 3. 非法连续运算符 ====================
-
-// * 后面紧跟 /，/ 不能作为一元运算符
+// 乘除运算符相邻
 TEST(ErrorExpressionTest, ConsecutiveMultiplyDivide) {
-    EXPECT_ANY_THROW(
-        calculator::eval("1 * / 2")
+    EXPECT_THROW(
+        calculator::eval("1 * / 2"),
+        calculator::error
     );
 }
 
-// ** 被识别为幂运算后，又多出一个 *
+// 连续三个星号
 TEST(ErrorExpressionTest, TripleAsterisk) {
-    EXPECT_ANY_THROW(
-        calculator::eval("1 *** 2")
+    EXPECT_THROW(
+        calculator::eval("1 *** 2"),
+        calculator::error
     );
 }
 
-
-// ==================== 4. 错误表达式结构 ====================
-
-// 两个操作数之间缺少运算符
+// 操作数间缺少运算符
 TEST(ErrorExpressionTest, MissingOperatorBetweenOperands) {
-    EXPECT_ANY_THROW(
-        calculator::eval("1 2")
+    EXPECT_THROW(
+        calculator::eval("1 2"),
+        calculator::error
     );
 }
 
-// 两个括号表达式之间缺少运算符
+// 括号间缺少运算符
 TEST(ErrorExpressionTest, MissingOperatorBetweenParentheses) {
-    EXPECT_ANY_THROW(
-        calculator::eval("(1)(2)")
+    EXPECT_THROW(
+        calculator::eval("(1)(2)"),
+        calculator::error
     );
 }

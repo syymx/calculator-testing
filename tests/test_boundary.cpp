@@ -5,9 +5,7 @@
 
 #include "../src/calculator.hpp"
 
-// ==================== 1. 十进制 int64 边界 ====================
-
-// INT64_MAX
+// 十进制上界
 TEST(BoundaryTest, Int64Max) {
     EXPECT_EQ(
         calculator::eval("9223372036854775807"),
@@ -15,7 +13,7 @@ TEST(BoundaryTest, Int64Max) {
     );
 }
 
-// INT64_MAX - 1
+// 十进制上界邻值
 TEST(BoundaryTest, NearInt64Max) {
     EXPECT_EQ(
         calculator::eval("9223372036854775806"),
@@ -23,7 +21,7 @@ TEST(BoundaryTest, NearInt64Max) {
     );
 }
 
-// 运算结果恰好达到 INT64_MAX
+// 加法达到上界
 TEST(BoundaryTest, ReachInt64Max) {
     EXPECT_EQ(
         calculator::eval("9223372036854775806 + 1"),
@@ -31,7 +29,7 @@ TEST(BoundaryTest, ReachInt64Max) {
     );
 }
 
-// INT64_MIN + 1
+// 十进制下界邻值
 TEST(BoundaryTest, NearInt64Min) {
     EXPECT_EQ(
         calculator::eval("-9223372036854775807"),
@@ -39,7 +37,7 @@ TEST(BoundaryTest, NearInt64Min) {
     );
 }
 
-// 运算结果恰好达到 INT64_MIN
+// 减法达到下界
 TEST(BoundaryTest, ReachInt64Min) {
     EXPECT_EQ(
         calculator::eval("-9223372036854775807 - 1"),
@@ -47,22 +45,17 @@ TEST(BoundaryTest, ReachInt64Min) {
     );
 }
 
-
-// ==================== 2. 零值边界 ====================
-
+// 零值
 TEST(BoundaryTest, ZeroValue) {
     EXPECT_EQ(calculator::eval("0"), 0);
 }
 
-
-// ==================== 3. 十六进制边界 ====================
-
-// 十六进制最小值
+// 十六进制零值
 TEST(BoundaryTest, HexZero) {
     EXPECT_EQ(calculator::eval("0x0"), 0);
 }
 
-// 十六进制 INT64_MAX - 1
+// 十六进制上界邻值
 TEST(BoundaryTest, HexNearInt64Max) {
     EXPECT_EQ(
         calculator::eval("0x7FFFFFFFFFFFFFFE"),
@@ -70,7 +63,7 @@ TEST(BoundaryTest, HexNearInt64Max) {
     );
 }
 
-// 十六进制最大合法正 int64
+// 十六进制上界
 TEST(BoundaryTest, HexInt64Max) {
     EXPECT_EQ(
         calculator::eval("0x7FFFFFFFFFFFFFFF"),
@@ -78,7 +71,7 @@ TEST(BoundaryTest, HexInt64Max) {
     );
 }
 
-// 十六进制运算结果达到 INT64_MAX
+// 十六进制加法达到上界
 TEST(BoundaryTest, HexReachInt64Max) {
     EXPECT_EQ(
         calculator::eval("0x7FFFFFFFFFFFFFFE + 1"),
@@ -86,7 +79,7 @@ TEST(BoundaryTest, HexReachInt64Max) {
     );
 }
 
-// 十六进制参与运算得到 INT64_MIN
+// 十六进制减法达到下界
 TEST(BoundaryTest, HexReachInt64Min) {
     EXPECT_EQ(
         calculator::eval("-0x7FFFFFFFFFFFFFFF - 1"),
@@ -94,15 +87,12 @@ TEST(BoundaryTest, HexReachInt64Min) {
     );
 }
 
-
-// ==================== 4. 移位边界 ====================
-
-// 最小合法移位量 0
+// 左移零位
 TEST(BoundaryTest, ShiftByZero) {
     EXPECT_EQ(calculator::eval("1 << 0"), 1);
 }
 
-// 大的合法左移，结果仍在 int64 正数范围
+// 左移62位
 TEST(BoundaryTest, LargeValidLeftShift) {
     EXPECT_EQ(
         calculator::eval("1 << 62"),
@@ -110,15 +100,12 @@ TEST(BoundaryTest, LargeValidLeftShift) {
     );
 }
 
-// 64 位整数最大的合法移位次数边界
+// 右移63位
 TEST(BoundaryTest, LargeValidRightShift) {
     EXPECT_EQ(calculator::eval("1 >> 63"), 0);
 }
 
-
-// ==================== 5. 表达式长度边界 ====================
-
-// 最短合法表达式：长度为 1
+// 最短表达式
 TEST(BoundaryTest, MinimumExpressionLength) {
     std::string expr = "1";
 
@@ -126,10 +113,8 @@ TEST(BoundaryTest, MinimumExpressionLength) {
     EXPECT_EQ(calculator::eval(expr), 1);
 }
 
-// 最大长度附近：9998
+// 表达式长度9998
 TEST(BoundaryTest, ExpressionLength9998) {
-    // "+1" + 4998 个 "+0"
-    // 2 + 4998 * 2 = 9998
     std::string expr = "+1";
 
     for (int i = 0; i < 4998; ++i) {
@@ -140,10 +125,8 @@ TEST(BoundaryTest, ExpressionLength9998) {
     EXPECT_EQ(calculator::eval(expr), 1);
 }
 
-// 最大合法长度：9999
+// 表达式长度9999
 TEST(BoundaryTest, ExpressionLength9999) {
-    // "1" + 4999 个 "+0"
-    // 1 + 4999 * 2 = 9999
     std::string expr = "1";
 
     for (int i = 0; i < 4999; ++i) {
@@ -154,10 +137,8 @@ TEST(BoundaryTest, ExpressionLength9999) {
     EXPECT_EQ(calculator::eval(expr), 1);
 }
 
-// 第一个非法长度：10000
+// 表达式长度10000
 TEST(BoundaryTest, ExpressionLength10000) {
-    // "+1" + 4999 个 "+0"
-    // 2 + 4999 * 2 = 10000
     std::string expr = "+1";
 
     for (int i = 0; i < 4999; ++i) {
@@ -165,18 +146,15 @@ TEST(BoundaryTest, ExpressionLength10000) {
     }
 
     ASSERT_EQ(expr.size(), 10000u);
-    EXPECT_ANY_THROW(calculator::eval(expr));
+    EXPECT_THROW(calculator::eval(expr), calculator::error);
 }
 
-
-// ==================== 6. 括号深度边界 ====================
-
-// 最小括号嵌套
+// 单层括号
 TEST(BoundaryTest, SingleParentheses) {
     EXPECT_EQ(calculator::eval("(1)"), 1);
 }
 
-// 深层括号嵌套鲁棒性
+// 百层括号
 TEST(BoundaryTest, DeepParentheses) {
     constexpr int depth = 100;
 
@@ -185,4 +163,18 @@ TEST(BoundaryTest, DeepParentheses) {
     expr += std::string(depth, ')');
 
     EXPECT_EQ(calculator::eval(expr), 1);
+}
+
+// 十进制下界直接解析
+TEST(BoundaryTest, Int64MinDecimalLiteral) {
+    std::int64_t result = 0;
+
+    ASSERT_NO_THROW(
+        result = calculator::eval("-9223372036854775808")
+    );
+
+    EXPECT_EQ(
+        result,
+        std::numeric_limits<std::int64_t>::min()
+    );
 }

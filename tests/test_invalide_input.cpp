@@ -2,67 +2,87 @@
 
 #include "../src/calculator.hpp"
 
-// 1. 空输入
+// 空输入
 TEST(InvalidInputTest, EmptyInput) {
-    EXPECT_ANY_THROW(
-        calculator::eval("")
+    EXPECT_THROW(
+        calculator::eval(""),
+        calculator::error
     );
 }
 
-// 2. 只有空白字符
+// 纯空白输入
 TEST(InvalidInputTest, WhitespaceOnly) {
-    EXPECT_ANY_THROW(
-        calculator::eval("   ")
+    EXPECT_THROW(
+        calculator::eval("   "),
+        calculator::error
     );
 }
 
-// 3. 非法十进制数字：数字中混入非法字符
+// 十进制数字含非法字符
 TEST(InvalidInputTest, InvalidDecimalNumber) {
-    EXPECT_ANY_THROW(
-        calculator::eval("1z22222")
+    EXPECT_THROW(
+        calculator::eval("1z22222"),
+        calculator::error
     );
 }
 
-// 4. 非法十六进制数字：G 不属于十六进制字符
+// 十六进制含非法字符
 TEST(InvalidInputTest, InvalidHexDigit) {
-    EXPECT_ANY_THROW(
-        calculator::eval("0xG1")
+    EXPECT_THROW(
+        calculator::eval("0xG1"),
+        calculator::error
     );
 }
 
-// 5. 不完整十六进制数字
+// 十六进制缺少数字
 TEST(InvalidInputTest, IncompleteHexNumber) {
-    EXPECT_ANY_THROW(
-        calculator::eval("0x")
+    EXPECT_THROW(
+        calculator::eval("0x"),
+        calculator::error
     );
 }
 
-// 6. 非法字符 @
+// 非法字符@
 TEST(InvalidInputTest, InvalidCharacterAt) {
-    EXPECT_ANY_THROW(
-        calculator::eval("1 @ 2")
+    EXPECT_THROW(
+        calculator::eval("1 @ 2"),
+        calculator::error
     );
 }
 
-// 7. 非法字符 $
-TEST(InvalidInputTest, InvalidCharacterDollar) {
-    EXPECT_ANY_THROW(
-        calculator::eval("1 $ 2")
-    );
-}
-
-// 8. 非法 Token：逻辑与 &&
-// Calculator 支持 &，但不应把 && 当作合法运算符
+// 不支持逻辑与
 TEST(InvalidInputTest, InvalidLogicalAndToken) {
-    EXPECT_ANY_THROW(
-        calculator::eval("1 && 2")
+    EXPECT_THROW(
+        calculator::eval("1 && 2"),
+        calculator::error
     );
 }
 
-// 9. 非法 Token：逻辑或 ||
-// Calculator 支持 |，但不应把 || 当作合法运算符
+// 不支持逻辑或
 TEST(InvalidInputTest, InvalidLogicalOrToken) {
-    EXPECT_ANY_THROW(
-        calculator::eval("1 || 2")
+    EXPECT_THROW(
+        calculator::eval("1 || 2"),
+        calculator::error
+    );
+}
+
+// 移位次数等于位宽
+TEST(InvalidInputTest, ShiftCountAtBitWidth) {
+    EXPECT_THROW(
+        calculator::eval("1 << 64"),
+        calculator::error
+    );
+
+    EXPECT_THROW(
+        calculator::eval("1 >> 64"),
+        calculator::error
+    );
+}
+
+// 负数移位
+TEST(InvalidInputTest, NegativeShiftCount) {
+    EXPECT_THROW(
+        calculator::eval("1 << -1"),
+        calculator::error
     );
 }
