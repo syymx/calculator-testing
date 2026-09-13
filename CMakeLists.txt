@@ -20,6 +20,12 @@ enable_testing()
 
 add_executable(calculator_tests
     tests/test_smoke.cpp
+
+    tests/test_basic.cpp
+    tests/test_precedence.cpp
+    tests/test_parentheses.cpp
+    tests/test_bitwise.cpp
+    tests/test_complex.cpp
 )
 
 target_include_directories(calculator_tests PRIVATE
