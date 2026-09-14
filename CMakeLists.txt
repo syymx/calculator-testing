@@ -26,6 +26,11 @@ add_executable(calculator_tests
     tests/test_parentheses.cpp
     tests/test_bitwise.cpp
     tests/test_complex.cpp
+    tests/test_boundary.cpp
+    tests/test_error_expression.cpp
+    tests/test_exception.cpp
+    tests/test_invalide_input.cpp
+    tests/test_overflow.cpp
 )
 
 target_include_directories(calculator_tests PRIVATE
